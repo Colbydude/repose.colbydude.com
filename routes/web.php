@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('login', [LoginController::class, 'redirectToProvider'])->name('login');
+Route::get('login/callback', [LoginController::class, 'handleProviderCallback'])->name('login-callback');
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
