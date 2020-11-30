@@ -24,7 +24,7 @@ class SecretSantaController extends Controller
      */
     public function index()
     {
-        $secretSantaRecord = SecretSanta2020::where('user_id', auth()->id())->get();
+        $secretSantaRecord = SecretSanta2020::where('user_id', auth()->id())->first();
 
         if ($secretSantaRecord == null) {
             return redirect()->route('secret-santa.opt-in.get');
@@ -40,7 +40,7 @@ class SecretSantaController extends Controller
      */
     public function getOptIn()
     {
-        $secretSantaRecord = SecretSanta2020::where('user_id', auth()->id())->get();
+        $secretSantaRecord = SecretSanta2020::where('user_id', auth()->id())->first();
 
         if ($secretSantaRecord != null) {
             return redirect()->route('secret-santa.index');
