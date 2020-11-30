@@ -6,7 +6,7 @@
         <h1 class="text-white text-4xl">Colbydude's Repose</h1>
     </div>
     <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-        <a href="{{ route('secret-santa.opt-in.get') }}" class="text-gray-700 underline">Secret Santa!!</a>
+        <a href="{{ route('secret-santa.opt-in.get') }}" class="text-gray-500 underline">Secret Santa!!</a>
     </div>
 </div>
 @stop
