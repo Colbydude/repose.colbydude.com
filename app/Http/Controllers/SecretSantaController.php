@@ -40,20 +40,16 @@ class SecretSantaController extends Controller
      */
     public function getOptIn()
     {
-        $secretSantaRecord = SecretSanta2020::where('user_id', auth()->id())->first();
+        $secretSantaRecord = SecretSanta2020::firstOrNew(['user_id' => auth()->id()]);
 
-        if ($secretSantaRecord != null) {
-            return redirect()->route('secret-santa.index');
-        }
-
-        return view('secret-santa/opt-in');
+        return view('secret-santa/opt-in', compact('secretSantaRecord'));
     }
 
     /**
      * Process the secret-santa opt-in form.
      *
      * @param  \Illuminate\Http\Request
-     * @return \Illuminate\Contracts\Support\Renderagble
+     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function postOptIn(Request $request)
     {
@@ -65,10 +61,13 @@ class SecretSantaController extends Controller
             'message' => 'required|string',
         ]);
 
-        $record = new SecretSanta2020($request->input());
-        $record->user_id = auth()->id();
-
-        $record->save();
+        $record = SecretSanta2020::updateOrCreate(
+            ['user_id' => auth()->id()],
+            array_merge(
+                $request->input(),
+                ['user_id' => auth()->id()],
+            )
+        );
 
         return redirect()->route('secret-santa.index');
     }
