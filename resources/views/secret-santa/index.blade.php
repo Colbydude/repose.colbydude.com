@@ -12,6 +12,9 @@
             <p class="mt-4 text-lg leading-6 text-gray-500 text-justify">
                 On <strong>December 10th</strong>, you'll be sent an email with information on your match for the gift exchange. The recommended spending limit is $50. Try and get your gift sent before Christmas, please!! You will also be able to visit this page to get information on your match after December 10th.
             </p>
+            <div class="mt-4">
+                <a href="{{ route('secret-santa.opt-in.get') }}" class="text-gray-500 underline">Edit Response</a>
+            </div>
         </div>
     </div>
 @stop
