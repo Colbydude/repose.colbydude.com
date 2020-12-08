@@ -41,8 +41,8 @@ class SecretSantafy extends Command
      */
     public function handle()
     {
+        $this->info("Fetching Secret Santas...");
         $santas = SecretSanta2020::with('user')->get();
-        $santaIds = $santas->pluck('id');
 
         $this->info("Matching...");
         $this->matchSantas($santas);
@@ -90,8 +90,6 @@ class SecretSantafy extends Command
         foreach ($santas as $santa) {
             $santa->save();
         }
-
-        return;
     }
 
     /**
