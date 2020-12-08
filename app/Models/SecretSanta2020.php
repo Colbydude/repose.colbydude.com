@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class SecretSanta2020 extends Model
@@ -26,4 +27,14 @@ class SecretSanta2020 extends Model
         'address',
         'message',
     ];
+
+    /**
+     * Get the user record associated with the secret santa.
+     *
+     * @return Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
