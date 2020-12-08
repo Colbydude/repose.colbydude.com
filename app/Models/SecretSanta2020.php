@@ -29,6 +29,16 @@ class SecretSanta2020 extends Model
     ];
 
     /**
+     * Get the secret santa record associated with match.
+     *
+     * @return Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function match()
+    {
+        return $this->belongsTo(SecretSanta2020::class, 'match_id');
+    }
+
+    /**
      * Get the user record associated with the secret santa.
      *
      * @return Illuminate\Database\Eloquent\Relations\BelongsTo

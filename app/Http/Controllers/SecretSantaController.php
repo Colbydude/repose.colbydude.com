@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SecretSanta2020;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SecretSantaController extends Controller
@@ -24,13 +25,13 @@ class SecretSantaController extends Controller
      */
     public function index()
     {
-        $secretSantaRecord = SecretSanta2020::where('user_id', auth()->id())->first();
+        $secretSantaRecord = SecretSanta2020::with('match')->where('user_id', auth()->id())->first();
 
         if ($secretSantaRecord == null) {
             return redirect()->route('secret-santa.opt-in.get');
         }
 
-        return view('secret-santa/index');
+        return view('secret-santa/index', compact('secretSantaRecord'));
     }
 
     /**
@@ -41,6 +42,10 @@ class SecretSantaController extends Controller
     public function getOptIn()
     {
         $secretSantaRecord = SecretSanta2020::firstOrNew(['user_id' => auth()->id()]);
+
+        if ($secretSantaRecord->match_id != null || new Carbon('December 10th 2020') < Carbon::now()) {
+            return redirect()->route('home');
+        }
 
         return view('secret-santa/opt-in', compact('secretSantaRecord'));
     }
