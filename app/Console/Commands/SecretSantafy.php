@@ -73,8 +73,14 @@ class SecretSantafy extends Command
             $santas[$i]->match_id = $matchId;
             $match = $santas->firstWhere('id', $matchId);
 
+            if ($santas[$i]->id == $match->id) {
+                $badMatches = true;
+                break;
+            }
+
             if ($santas[$i]->address == $match->address) {
                 $badMatches = true;
+                break;
             }
         }
 
