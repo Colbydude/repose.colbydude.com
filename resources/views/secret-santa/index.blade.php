@@ -24,12 +24,12 @@
                     {!! \Illuminate\Mail\Markdown::parse(nl2br($secretSantaRecord->match->message)) !!}
                 </div>
             @else
-                @if (new \Carbon\Carbon('December 10th 2020') > \Carbon\Carbon::now())
+                @if (new \Carbon\Carbon(\App\Http\Controllers\SecretSantaController::CUTOFF_DATE) > \Carbon\Carbon::now())
                     <h3 class="text-xl font-extrabold tracking-tight text-gray-300 sm:text-2xl">
                         You're in!
                     </h3>
                     <p class="mt-4 text-lg leading-6 text-gray-500 text-justify">
-                        On <strong>December 10th</strong>, you'll be sent an email with information on your match for the gift exchange. The recommended spending limit is $50. Try and get your gift sent before Christmas, please!! You will also be able to visit this page to get information on your match after December 10th.
+                        On <strong>&lt;DATE PENDING&gt;</strong>, you'll be sent an email with information on your match for the gift exchange. The recommended spending limit is $50 and digital purchases are highly encouraged. Try and get your gift sent before Christmas, please!! You will also be able to visit this page to get information on your match after <strong>&lt;DATE PENDING&gt;</strong>.
                     </p>
                     <div class="mt-4">
                         <a href="{{ route('secret-santa.opt-in.get') }}" class="text-gray-500 underline">Edit Response</a>

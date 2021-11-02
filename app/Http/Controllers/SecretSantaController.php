@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SecretSanta2020;
+use App\Models\SecretSanta2021;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SecretSantaController extends Controller
 {
+    /**
+     * The cutoff date for the secret santa.
+     *
+     * @var string
+     */
+    public const CUTOFF_DATE = 'December 10th 2021';
+
     /**
      * Create a new controller instance.
      *
@@ -25,7 +32,7 @@ class SecretSantaController extends Controller
      */
     public function index()
     {
-        $secretSantaRecord = SecretSanta2020::with('match')->where('user_id', auth()->id())->first();
+        $secretSantaRecord = SecretSanta2021::with('match')->where('user_id', auth()->id())->first();
 
         if ($secretSantaRecord == null) {
             return redirect()->route('secret-santa.opt-in.get');
@@ -41,9 +48,9 @@ class SecretSantaController extends Controller
      */
     public function getOptIn()
     {
-        $secretSantaRecord = SecretSanta2020::firstOrNew(['user_id' => auth()->id()]);
+        $secretSantaRecord = SecretSanta2021::firstOrNew(['user_id' => auth()->id()]);
 
-        if ($secretSantaRecord->match_id != null || new Carbon('December 10th 2020') < Carbon::now()) {
+        if ($secretSantaRecord->match_id != null || new Carbon(SecretSantaController::CUTOFF_DATE) < Carbon::now()) {
             return redirect()->route('home');
         }
 
@@ -66,7 +73,7 @@ class SecretSantaController extends Controller
             'message' => 'required|string',
         ]);
 
-        $record = SecretSanta2020::updateOrCreate(
+        $record = SecretSanta2021::updateOrCreate(
             ['user_id' => auth()->id()],
             array_merge(
                 $request->input(),

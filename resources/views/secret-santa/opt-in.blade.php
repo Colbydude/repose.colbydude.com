@@ -7,7 +7,7 @@
                 Discord Secret Santa
             </h2>
             <p class="mt-4 text-lg leading-6 text-gray-500 text-justify">
-                We're holding our first ever Discord Secret Santa! Fill out the form below to opt-in. On <strong>December 10th</strong>, you'll be sent an email with information on your match for the gift exchange. The recommended spending limit is $50. Try and get your gift sent before Christmas, please!!
+                We're holding our second Discord Secret Santa! Fill out the form below to opt-in. On <strong>&lt;DATE PENDING&gt;</strong>, you'll be sent an email with information on your match for the gift exchange. The recommended spending limit is $50 and digital purchases are highly encouraged. Try and get your gift sent before Christmas, please!!
             </p>
         </div>
         <div class="mt-12">
