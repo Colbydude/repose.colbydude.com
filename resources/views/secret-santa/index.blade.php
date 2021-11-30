@@ -29,7 +29,7 @@
                         You're in!
                     </h3>
                     <p class="mt-4 text-lg leading-6 text-gray-500 text-justify">
-                        On <strong>&lt;DATE PENDING&gt;</strong>, you'll be sent an email with information on your match for the gift exchange. The recommended spending limit is $50 and digital purchases are highly encouraged. Try and get your gift sent before Christmas, please!! You will also be able to visit this page to get information on your match after <strong>&lt;DATE PENDING&gt;</strong>.
+                        On <strong>{{ \App\Http\Controllers\SecretSantaController::CUTOFF_DATE }}</strong>, you'll be sent an email with information on your match for the gift exchange. The recommended spending limit is $50 and digital purchases are highly encouraged. Try and get your gift sent before Christmas, please!! You will also be able to visit this page to get information on your match after <strong>{{ \App\Http\Controllers\SecretSantaController::CUTOFF_DATE }}</strong>.
                     </p>
                     <div class="mt-4">
                         <a href="{{ route('secret-santa.opt-in.get') }}" class="text-gray-500 underline">Edit Response</a>

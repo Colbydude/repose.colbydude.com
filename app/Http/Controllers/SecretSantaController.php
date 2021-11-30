@@ -13,7 +13,7 @@ class SecretSantaController extends Controller
      *
      * @var string
      */
-    public const CUTOFF_DATE = 'December 10th 2021';
+    public const CUTOFF_DATE = 'December 6th 2021';
 
     /**
      * Create a new controller instance.
@@ -73,7 +73,7 @@ class SecretSantaController extends Controller
             'message' => 'required|string',
         ]);
 
-        $record = SecretSanta2021::updateOrCreate(
+        SecretSanta2021::updateOrCreate(
             ['user_id' => auth()->id()],
             array_merge(
                 $request->input(),
