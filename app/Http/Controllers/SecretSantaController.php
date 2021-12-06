@@ -13,7 +13,7 @@ class SecretSantaController extends Controller
      *
      * @var string
      */
-    public const CUTOFF_DATE = 'December 7th 2021';
+    public const CUTOFF_DATE = 'December 6th 2021';
 
     /**
      * Create a new controller instance.
