@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\SecretSantaMail;
+use App\Models\SecretSanta2022;
 use App\Models\SecretSanta2023;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -62,38 +63,49 @@ class SecretSantafy extends Command
      */
     private function matchSantas(Collection $santas) : void
     {
-        $santaIds = $santas->pluck('id');
-        $matchIds = $santaIds->shuffle();
+        $santaUserIds = $santas->pluck('user_id')->toArray();
+        $addressMap = $santas->pluck('address', 'user_id');
+        $potentialMatches = $santaUserIds;
 
-        $badMatches = false;
+        // Retrieve last year's matches based on user_id
+        $lastYearMatches = SecretSanta2022::whereIn('user_id', $santaUserIds)
+            ->get(['user_id', 'match_id'])
+            ->pluck('match_id', 'user_id')
+            ->toArray();
 
-        for ($i = 0; $i < count($santas); $i++) {
-            $matchId = $matchIds[$i];
+        $attemptCount = 0;
+        $maxAttempts = 100;
 
-            $santas[$i]->match_id = $matchId;
-            $match = $santas->firstWhere('id', $matchId);
+        do {
+            $badMatches = false;
+            shuffle($potentialMatches);
+            $attemptCount++;
 
-            if ($santas[$i]->id == $match->id) {
-                $badMatches = true;
-                break;
+            foreach ($santaUserIds as $index => $santaUserId) {
+                $matchedUserId = $potentialMatches[$index];
+
+                // Check for self-match, same address, and last year's match.
+                if (
+                    $santaUserId == $matchedUserId ||
+                    $addressMap[$santaUserId] == $addressMap[$matchedUserId] ||
+                    (array_key_exists($santaUserId, $lastYearMatches) && $lastYearMatches[$santaUserId] == $matchedUserId)
+                ) {
+                    $badMatches = true;
+                    $this->info("Rematching...");
+                    break;
+                }
             }
 
-            if ($santas[$i]->address == $match->address) {
-                $badMatches = true;
-                break;
+            if ($attemptCount > $maxAttempts) {
+                $this->error("Unable to resolve matches within $maxAttempts attempts.");
+                return;
             }
-        }
-
-        if ($badMatches) {
-            $this->line("Rematching...");
-            $this->matchSantas($santas);
-
-            return;
-        }
+        } while ($badMatches);
 
         $this->info("Writing matches to DB...");
 
-        foreach ($santas as $santa) {
+        foreach ($santas as $index => $santa) {
+            $santa->match_id = $santas->firstWhere('user_id', $potentialMatches[$index])->id;
             $santa->save();
         }
     }
