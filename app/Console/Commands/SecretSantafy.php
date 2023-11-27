@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\SecretSantaMail;
-use App\Models\SecretSanta2022;
+use App\Models\SecretSanta2023;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
@@ -42,7 +42,7 @@ class SecretSantafy extends Command
     public function handle()
     {
         $this->info("Fetching Secret Santas...");
-        $santas = SecretSanta2022::with('user')->get();
+        $santas = SecretSanta2023::with('user')->get();
 
         $this->info("Matching...");
         $this->matchSantas($santas);

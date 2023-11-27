@@ -5,14 +5,14 @@ namespace App\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
-class SecretSanta2022 extends Model
+class SecretSanta2023 extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'secret_santa_2022';
+    protected $table = 'secret_santa_2023';
 
     /**
      * The attributes that are mass assignable.
@@ -35,7 +35,7 @@ class SecretSanta2022 extends Model
      */
     public function match()
     {
-        return $this->belongsTo(SecretSanta2022::class, 'match_id');
+        return $this->belongsTo(SecretSanta2023::class, 'match_id');
     }
 
     /**
