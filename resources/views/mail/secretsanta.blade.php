@@ -1,7 +1,7 @@
 @component('mail::message')
 # Secret Santa - You've been matched!
 
-Hello and thank you for opting in to the first Secret Santa for Colbydude's Repose! You've been matched!
+Hello and thank you for opting in to the annual Secret Santa for Colbydude's Repose! You've been matched!
 
 @component('mail::panel')
 **Name:**<br />
