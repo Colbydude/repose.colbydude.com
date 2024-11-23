@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\SecretSanta2023;
+use App\Models\SecretSanta2024;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,15 +11,15 @@ class SecretSantaMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public SecretSanta2023 $santa;
-    public SecretSanta2023 $match;
+    public SecretSanta2024 $santa;
+    public SecretSanta2024 $match;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(SecretSanta2023 $santa, SecretSanta2023 $match)
+    public function __construct(SecretSanta2024 $santa, SecretSanta2024 $match)
     {
         $this->santa = $santa;
         $this->match = $match;
