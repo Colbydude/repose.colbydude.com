@@ -15,7 +15,7 @@
             }
         </style>
 
-        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        <link href="{{ Vite::asset('resources/css/app.css') }}" rel="stylesheet">
     </head>
     <body class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen bg-gray-900 px-4 sm:items-center sm:pt-0 sm:px-6">
