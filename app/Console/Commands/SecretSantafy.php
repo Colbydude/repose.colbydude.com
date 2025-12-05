@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Mail\SecretSantaMail;
-use App\Models\SecretSanta2023;
 use App\Models\SecretSanta2024;
+use App\Models\SecretSanta2025;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
@@ -43,7 +44,7 @@ class SecretSantafy extends Command
     public function handle()
     {
         $this->info("Fetching Secret Santas...");
-        $santas = SecretSanta2024::with('user')->get();
+        $santas = SecretSanta2025::with('user')->get();
 
         $this->info("Matching...");
         $this->matchSantas($santas);
@@ -61,51 +62,41 @@ class SecretSantafy extends Command
      * @param  Illuminate\Support\Collection $santas
      * @return void
      */
-    private function matchSantas(Collection $santas) : void
+    private function matchSantas(Collection $santas): void
     {
         $santaUserIds = $santas->pluck('user_id')->toArray();
         $addressMap = $santas->pluck('address', 'user_id');
-        $potentialMatches = $santaUserIds;
-
-        // Retrieve last year's matches based on user_id
-        $lastYearMatches = SecretSanta2023::whereIn('user_id', $santaUserIds)
+        $lastYearMatches = SecretSanta2024::whereIn('user_id', $santaUserIds)
             ->get(['user_id', 'match_id'])
             ->pluck('match_id', 'user_id')
             ->toArray();
 
-        $attemptCount = 0;
-        $maxAttempts = 100;
+        $matches = [];
+        $remainingReceivers = collect($santaUserIds);
 
-        do {
-            $badMatches = false;
-            shuffle($potentialMatches);
-            $attemptCount++;
+        foreach ($santaUserIds as $santaUserId) {
+            $validReceivers = $remainingReceivers->filter(function ($receiverId) use ($santaUserId, $addressMap, $lastYearMatches) {
+                return $santaUserId !== $receiverId // Avoid self-match
+                    && $addressMap[$santaUserId] !== $addressMap[$receiverId] // Avoid matching same address
+                    && (!isset($lastYearMatches[$santaUserId]) || $lastYearMatches[$santaUserId] !== $receiverId); // Avoid last year's match
+            });
 
-            foreach ($santaUserIds as $index => $santaUserId) {
-                $matchedUserId = $potentialMatches[$index];
-
-                // Check for self-match, same address, and last year's match.
-                if (
-                    $santaUserId == $matchedUserId ||
-                    $addressMap[$santaUserId] == $addressMap[$matchedUserId] ||
-                    (array_key_exists($santaUserId, $lastYearMatches) && $lastYearMatches[$santaUserId] == $matchedUserId)
-                ) {
-                    $badMatches = true;
-                    $this->info("Rematching...");
-                    break;
-                }
+            if ($validReceivers->isEmpty()) {
+                throw new Exception("Unable to find valid matches. Adjust constraints or data.");
             }
 
-            if ($attemptCount > $maxAttempts) {
-                $this->error("Unable to resolve matches within $maxAttempts attempts.");
-                return;
-            }
-        } while ($badMatches);
+            // Pick a random valid receiver.
+            $matchId = $validReceivers->random();
+            $matches[$santaUserId] = $matchId;
+
+            // Remove the chosen receiver from the pool.
+            $remainingReceivers = $remainingReceivers->reject(fn($id) => $id === $matchId);
+        }
 
         $this->info("Writing matches to DB...");
 
-        foreach ($santas as $index => $santa) {
-            $santa->match_id = $santas->firstWhere('user_id', $potentialMatches[$index])->id;
+        foreach ($santas as $santa) {
+            $santa->match_id = $santas->firstWhere('user_id', $matches[$santa->user_id])->id;
             $santa->save();
         }
     }
@@ -116,7 +107,7 @@ class SecretSantafy extends Command
      * @param  Illuminate\Support\Collection $santas
      * @return void
      */
-    private function sendMatchEmails(Collection $santas) : void
+    private function sendMatchEmails(Collection $santas): void
     {
         foreach ($santas as $santa) {
             $match = $santas->firstWhere('id', $santa->match_id);
