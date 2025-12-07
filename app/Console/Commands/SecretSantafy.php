@@ -27,16 +27,6 @@ class SecretSantafy extends Command
     protected $description = 'Perform matching for Secret Santa';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int

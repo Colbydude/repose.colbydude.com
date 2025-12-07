@@ -17,7 +17,7 @@ class SecretSanta2025 extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',

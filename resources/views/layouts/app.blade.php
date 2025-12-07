@@ -4,28 +4,49 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Colbydude's Repose</title>
+        {{-- Inline script to detect system dark mode preference and apply it immediately --}}
+        <script>
+            (function() {
+                const appearance = '{{ $appearance ?? "system" }}';
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
+                if (appearance === 'system') {
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+                    if (prefersDark) {
+                        document.documentElement.classList.add('dark');
+                    }
+                }
+            })();
+        </script>
+
+        {{-- Inline style to set the HTML background color based on our theme in app.css --}}
         <style>
-            body {
-                font-family: 'Lato';
+            html {
+                background-color: oklch(1 0 0);
+            }
+
+            html.dark {
+                background-color: oklch(0.145 0 0);
             }
         </style>
 
-        <link href="{{ Vite::asset('resources/css/app.css') }}" rel="stylesheet">
+        <title>{{ config('app.name', 'Colbydude\'s Repose') }}</title>
+
+        <link rel="icon" href="/favicon.ico" sizes="any">
+
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700&display=swap" rel="stylesheet">
+
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="antialiased">
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-900 px-4 sm:items-center sm:pt-0 sm:px-6">
+    <body class="font-sans antialiased">
+        <div class="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
             @if (Route::has('login'))
-                <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+                <div class="hidden fixed top-0 right-0 px-6 py-4 text-secondary sm:block">
                     @auth
-                        <a href="{{ route('home') }}" class="text-sm text-gray-700 underline">Home</a> |
+                        <a href="{{ route('home') }}" class="text-sm text-secondary underline">Home</a> |
                         <a
                             href="{{ route('logout') }}"
-                            class="text-sm text-gray-700 underline"
+                            class="text-sm text-secondary underline"
                             onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();"
                         >
@@ -36,10 +57,10 @@
                             @csrf
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Login</a>
+                        <a href="{{ route('login') }}" class="text-sm text-secondary underline">Login</a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 underline">Register</a>
+                            <a href="{{ route('register') }}" class="ml-4 text-sm text-secondary underline">Register</a>
                         @endif
                     @endauth
                 </div>

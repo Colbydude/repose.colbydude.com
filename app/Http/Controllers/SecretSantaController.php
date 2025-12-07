@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SecretSanta2025;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class SecretSantaController extends Controller
@@ -16,23 +17,13 @@ class SecretSantaController extends Controller
     public const CUTOFF_DATE = 'December 11th 2025';
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
      * Show the secret santa landing page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        $secretSantaRecord = SecretSanta2025::with('match')->where('user_id', auth()->id())->first();
+        $secretSantaRecord = SecretSanta2025::with('match')->where('user_id', Auth::id())->first();
 
         if ($secretSantaRecord == null) {
             return redirect()->route('secret-santa.opt-in.get');
@@ -48,7 +39,7 @@ class SecretSantaController extends Controller
      */
     public function getOptIn()
     {
-        $secretSantaRecord = SecretSanta2025::firstOrNew(['user_id' => auth()->id()]);
+        $secretSantaRecord = SecretSanta2025::firstOrNew(['user_id' => Auth::id()]);
 
         if ($secretSantaRecord->match_id != null || new Carbon(SecretSantaController::CUTOFF_DATE) < Carbon::now()) {
             return redirect()->route('home');
@@ -74,10 +65,10 @@ class SecretSantaController extends Controller
         ]);
 
         SecretSanta2025::updateOrCreate(
-            ['user_id' => auth()->id()],
+            ['user_id' => Auth::id()],
             array_merge(
                 $request->input(),
-                ['user_id' => auth()->id()],
+                ['user_id' => Auth::id()],
             )
         );
 
