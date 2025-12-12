@@ -14,7 +14,7 @@ class SecretSantaController extends Controller
      *
      * @var string
      */
-    public const CUTOFF_DATE = 'December 12th 2025';
+    public const CUTOFF_DATE = 'December 13th 2025';
 
     /**
      * Show the secret santa landing page.
