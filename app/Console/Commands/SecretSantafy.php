@@ -56,10 +56,18 @@ class SecretSantafy extends Command
     {
         $santaUserIds = $santas->pluck('user_id')->toArray();
         $addressMap = $santas->pluck('address', 'user_id');
-        $lastYearMatches = SecretSanta2024::whereIn('user_id', $santaUserIds)
-            ->get(['user_id', 'match_id'])
-            ->pluck('match_id', 'user_id')
-            ->toArray();
+
+        $lastYearRecords = SecretSanta2024::whereIn('user_id', $santaUserIds)
+            ->get(['id', 'user_id', 'match_id']);
+        $lastYearMatches = $lastYearRecords->pluck('match_id', 'id')->toArray();
+
+        // Finalize to array to santa_user_id: match_user_id.
+        foreach ($lastYearMatches as $santaUserId => $matchId) {
+            $matchRecord = $lastYearRecords->find($matchId);
+
+            if ($matchRecord != null)
+                $lastYearMatches[$santaUserId] = $matchRecord->user_id;
+        }
 
         $matches = [];
         $remainingReceivers = collect($santaUserIds);
